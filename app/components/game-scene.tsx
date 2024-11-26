@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Canvas, events, useFrame, useThree } from "@react-three/fiber";
-import { MapControls, OrbitControls } from "@react-three/drei";
+import { CameraControls } from "./camera-controls.tsx";
 import { Player } from "./player.tsx";
 import * as THREE from "three";
 import { ui } from "~/lib/client/tunnel.ts";
@@ -116,15 +116,7 @@ const GameScene = () => {
         <Player mouse={mouse.current} />
         <InfinitePlane mouse={mouse.current} />
         <WorldWalls />
-        <OrbitControls
-          enableRotate={false}
-          enablePan={true}
-          minDistance={20}
-          maxDistance={cameraDistance}
-          onChange={(event) => {
-            if (!event) return;
-          }}
-        />
+        <CameraControls maxDistance={cameraDistance} />
         <ambientLight intensity={0.1} />
       </Canvas>
       <div className="fixed top-0 right-0 bottom-0 left-0 pointer-events-none text-white">
