@@ -6,10 +6,9 @@ import * as THREE from "three";
 import { useMouse } from "~/lib/client/useMouse.ts";
 import { usePlayer } from "~/lib/client/usePlayer.ts";
 
-const Player = ({ mouse }: { mouse: THREE.Vector2 }) => {
+const Player = () => {
   const playerRef = useRef<THREE.Group>(null!);
   const { position: playerPosition } = usePlayer({
-    mouse,
     playerRef,
   });
   const { position: mousePosition } = useMouse();

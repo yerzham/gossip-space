@@ -4,10 +4,8 @@ import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 
 const usePlayer = ({
-  mouse,
   playerRef,
 }: {
-  mouse: THREE.Vector2;
   playerRef: React.MutableRefObject<THREE.Group | THREE.Mesh>;
 }) => {
   const planeZ = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)).current;
@@ -15,9 +13,9 @@ const usePlayer = ({
   const intersectPoint = useRef(new THREE.Vector3()).current;
   const [position, setPlayerPosition] = useState({ x: 0, y: 0 });
 
-  useFrame(({ camera }) => {
+  useFrame(({ camera, pointer }) => {
     if (playerRef.current) {
-      raycaster.setFromCamera(mouse, camera);
+      raycaster.setFromCamera(pointer, camera);
       raycaster.ray.intersectPlane(planeZ, intersectPoint);
       intersectPoint.x = Math.min(
         Math.max(intersectPoint.x, -world.xDim / 2),
