@@ -37,7 +37,7 @@ const Star = forwardRef<THREE.Group>((_, ref) => {
       if (spotLightRef.current) {
         spotLightRef.current.position.x = groupRef.current.position.x;
         spotLightRef.current.position.y = groupRef.current.position.y;
-        spotLightRef.current.position.z = 3;
+        spotLightRef.current.position.z = 1;
         spotLightRef.current.target = groupRef.current;
       }
     }
@@ -61,9 +61,9 @@ const Star = forwardRef<THREE.Group>((_, ref) => {
 
       <spotLight
         ref={spotLightRef}
-        intensity={4} // Brightness of the emitted light
-        distance={5} // Range of light
-        decay={2} // Light falloff
+        intensity={1} // Brightness of the emitted light
+        distance={2} // Range of light
+        decay={4} // Light falloff
         angle={Math.PI / 4} // Light cone angle
         color="yellow"
       />

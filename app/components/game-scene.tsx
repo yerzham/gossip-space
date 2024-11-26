@@ -1,22 +1,23 @@
 import React, { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { Canvas, events, useFrame, useThree } from "@react-three/fiber";
+import { MapControls, OrbitControls } from "@react-three/drei";
 import { Player } from "./player.tsx";
 import * as THREE from "three";
 import { ui } from "~/lib/client/tunnel.ts";
+import { useWindowSize } from "~/lib/client/useWindowSize.tsx";
+import { world } from "~/game/world.ts";
+import { usePlayer } from "~/lib/client/usePlayer.ts";
 
 const InfinitePlane = ({ mouse }: { mouse: THREE.Vector2 }) => {
   const planeRef = useRef<THREE.Mesh>(null!);
-  const planeZ = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)).current;
-  const raycaster = useRef(new THREE.Raycaster()).current;
-  const intersectPoint = useRef(new THREE.Vector3()).current;
+  usePlayer({
+    mouse,
+    playerRef: planeRef,
+  });
 
-  useFrame(({ camera }) => {
+  useFrame(() => {
     if (planeRef.current) {
-      raycaster.setFromCamera(mouse, camera);
-      raycaster.ray.intersectPlane(planeZ, intersectPoint);
-      intersectPoint.z = -3;
-      planeRef.current.position.lerp(intersectPoint, 0.2);
+      planeRef.current.position.z = -3;
     }
   });
 
@@ -28,8 +29,69 @@ const InfinitePlane = ({ mouse }: { mouse: THREE.Vector2 }) => {
   );
 };
 
+const WorldWalls = () => {
+  const cameraDistance =
+    (world.yDim / 2) / Math.tan((20 / 2) * (Math.PI / 180)) + 6;
+  const walls = [
+    {
+      position: new THREE.Vector3(
+        0,
+        world.yDim / 2 + 2,
+        cameraDistance / 2 - 3,
+      ),
+      rotation: new THREE.Euler(Math.PI / 180 * 90, 0, 0),
+      scale: [world.xDim + 4, cameraDistance, 1] as const,
+    },
+    {
+      position: new THREE.Vector3(
+        0,
+        -world.yDim / 2 - 2,
+        cameraDistance / 2 - 3,
+      ),
+      rotation: new THREE.Euler(-Math.PI / 180 * 90, 0, 0),
+      scale: [world.xDim + 4, cameraDistance, 1] as const,
+    },
+    {
+      position: new THREE.Vector3(
+        world.xDim / 2 + 2,
+        0,
+        cameraDistance / 2 - 3,
+      ),
+      rotation: new THREE.Euler(0, -Math.PI / 180 * 90, 0),
+      scale: [cameraDistance, world.yDim + 4, 1] as const,
+    },
+    {
+      position: new THREE.Vector3(
+        -world.xDim / 2 - 2,
+        0,
+        cameraDistance / 2 - 3,
+      ),
+      rotation: new THREE.Euler(0, Math.PI / 180 * 90, 0),
+      scale: [cameraDistance, world.yDim + 4, 1] as const,
+    },
+  ];
+
+  return (
+    <>
+      {walls.map((wall, index) => (
+        <mesh
+          key={index}
+          position={wall.position}
+          rotation={wall.rotation}
+          scale={wall.scale}
+        >
+          <planeGeometry args={[1, 1]} />
+          <meshStandardMaterial color="white" />
+        </mesh>
+      ))}
+    </>
+  );
+};
+
 const GameScene = () => {
   const mouse = useRef(new THREE.Vector2());
+
+  // const { camera } = useThree()
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>) => {
     const { clientX, clientY, currentTarget } = event;
@@ -39,30 +101,33 @@ const GameScene = () => {
     mouse.current.y = -((clientY - rect.top) / rect.height) * 2 + 1;
   };
 
+  const cameraDistance = (world.yDim / 2) /
+    Math.tan((20 / 2) * (Math.PI / 180));
+  const cameraFov = 2 * Math.atan((world.yDim / 2) / cameraDistance) *
+    (180 / Math.PI);
+
   return (
     <>
       <Canvas
         onMouseMove={handleMouseMove}
         style={{ width: "100vw", height: "100vh", background: "black" }}
-        camera={{ position: [0, 0, 30], fov: 55 }}
+        camera={{ position: [0, 0, cameraDistance], fov: cameraFov }}
       >
         <Player mouse={mouse.current} />
         <InfinitePlane mouse={mouse.current} />
+        <WorldWalls />
         <OrbitControls
           enableRotate={false}
-          enablePan={false}
-          minDistance={10}
-          maxDistance={40}
+          enablePan={true}
+          minDistance={20}
+          maxDistance={cameraDistance}
           onChange={(event) => {
             if (!event) return;
-            const camera = event.target.object;
-            // Restrict camera's x and y movement bounds
-            camera.position.x = Math.min(Math.max(camera.position.x, -10), 10);
-            camera.position.y = Math.min(Math.max(camera.position.y, -5), 5);
           }}
         />
+        <ambientLight intensity={0.1} />
       </Canvas>
-      <div className="fixed top-0 right-0 bottom-0 left-0 pointer-events-none">
+      <div className="fixed top-0 right-0 bottom-0 left-0 pointer-events-none text-white">
         <ui.Out />
       </div>
     </>

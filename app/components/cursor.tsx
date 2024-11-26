@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useMousePosition } from "~/lib/client/useMousePosition";
+import { useMouse } from "~/lib/client/useMouse";
 
 const Cursor: React.FC = () => {
-  const position = useMousePosition();
+  const { position } = useMouse();
 
   return (
     <>
