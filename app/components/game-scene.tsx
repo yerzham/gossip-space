@@ -29,14 +29,14 @@ const InfinitePlane = () => {
 };
 
 const WorldWalls = () => {
-  const cameraDistance = world.yDim / 2 / Math.tan((20 / 2) * (Math.PI / 180)) +
-    6;
+  const cameraDistance =
+    world.yDim / 2 / Math.tan((20 / 2) * (Math.PI / 180)) + 6;
   const walls = [
     {
       position: new THREE.Vector3(
         0,
         world.yDim / 2 + 2,
-        cameraDistance / 2 - 3,
+        cameraDistance / 2 - 3
       ),
       rotation: new THREE.Euler((Math.PI / 180) * 90, 0, 0),
       scale: [world.xDim + 4, cameraDistance, 1] as const,
@@ -45,7 +45,7 @@ const WorldWalls = () => {
       position: new THREE.Vector3(
         0,
         -world.yDim / 2 - 2,
-        cameraDistance / 2 - 3,
+        cameraDistance / 2 - 3
       ),
       rotation: new THREE.Euler((-Math.PI / 180) * 90, 0, 0),
       scale: [world.xDim + 4, cameraDistance, 1] as const,
@@ -54,7 +54,7 @@ const WorldWalls = () => {
       position: new THREE.Vector3(
         world.xDim / 2 + 2,
         0,
-        cameraDistance / 2 - 3,
+        cameraDistance / 2 - 3
       ),
       rotation: new THREE.Euler(0, (-Math.PI / 180) * 90, 0),
       scale: [cameraDistance, world.yDim + 4, 1] as const,
@@ -63,7 +63,7 @@ const WorldWalls = () => {
       position: new THREE.Vector3(
         -world.xDim / 2 - 2,
         0,
-        cameraDistance / 2 - 3,
+        cameraDistance / 2 - 3
       ),
       rotation: new THREE.Euler(0, (Math.PI / 180) * 90, 0),
       scale: [cameraDistance, world.yDim + 4, 1] as const,
@@ -80,7 +80,11 @@ const WorldWalls = () => {
           scale={wall.scale}
         >
           <planeGeometry args={[1, 1]} />
-          <meshStandardMaterial color="white" />
+          <meshStandardMaterial
+            color="white"
+            emissive="grey"
+            emissiveIntensity={0.02}
+          />
         </mesh>
       ))}
     </>
@@ -89,8 +93,8 @@ const WorldWalls = () => {
 
 const GameScene = () => {
   const cameraDistance = world.yDim / 2 / Math.tan((20 / 2) * (Math.PI / 180));
-  const cameraFov = 2 * Math.atan(world.yDim / 2 / cameraDistance) *
-    (180 / Math.PI);
+  const cameraFov =
+    2 * Math.atan(world.yDim / 2 / cameraDistance) * (180 / Math.PI);
 
   return (
     <>
