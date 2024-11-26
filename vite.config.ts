@@ -11,5 +11,10 @@ export default defineConfig({
       plugins: [tailwindcss, autoprefixer],
     },
   },
+  server: {
+    proxy: {
+      "/api/ws": "ws://localhost:8000",
+    },
+  },
   plugins: [deno(), reactRouter(), tsconfigPaths()],
 });

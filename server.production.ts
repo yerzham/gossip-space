@@ -1,6 +1,7 @@
 import { serveFile } from "@std/http/file-server";
 import { join } from "@std/path/join";
 import { createRequestHandler } from "react-router";
+import { wssHandler } from "./app/wss.ts";
 
 const handleRequest = createRequestHandler(
   // @ts-expect-error - build output
@@ -9,6 +10,9 @@ const handleRequest = createRequestHandler(
 );
 
 Deno.serve(async (request) => {
+  const res = wssHandler(request);
+  if (res) return res;
+
   const pathname = new URL(request.url).pathname;
 
   try {
