@@ -21,7 +21,9 @@ const Star = forwardRef<THREE.Group>((_, ref) => {
         roughness: 0.5, // Smooth surface
 
         emissive: new THREE.Color("yellow"), // Glow effect
-        emissiveIntensity: 0.07, // Intensity of the glow
+        emissiveIntensity: 0.2, // Intensity of the glow
+        transparent: true, // Enable transparency
+        opacity: 0.8,
       });
     }
   });
@@ -29,6 +31,7 @@ const Star = forwardRef<THREE.Group>((_, ref) => {
   useFrame(({ clock }) => {
     if (groupRef.current) {
       groupRef.current.rotation.y += 0.01;
+      groupRef.current.rotation.x += 0.008;
       const scale = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.05;
       groupRef.current.scale.set(scale, scale, scale);
       if (spotLightRef.current) {
@@ -58,7 +61,7 @@ const Star = forwardRef<THREE.Group>((_, ref) => {
 
       <spotLight
         ref={spotLightRef}
-        intensity={2} // Brightness of the emitted light
+        intensity={4} // Brightness of the emitted light
         distance={5} // Range of light
         decay={2} // Light falloff
         angle={Math.PI / 4} // Light cone angle
