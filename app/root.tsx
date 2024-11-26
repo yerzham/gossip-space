@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root.ts";
 import "./app.css";
+import { Cursor } from "./components/cursor.tsx";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -33,9 +34,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="cursor-none">
         {children}
         <ScrollRestoration />
+        <Cursor />
         <Scripts />
       </body>
     </html>
