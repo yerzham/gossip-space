@@ -1,0 +1,24 @@
+{
+  "tasks": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "format": "deno fmt",
+    "lint": "deno lint",
+    "start": "deno run -A ./server.production.ts",
+    "typecheck": {
+      "command": "deno check '**/*' && tsc --build --noEmit",
+      "dependencies": ["typegen"]
+    },
+    "typegen": "deno types > ./app/deno.d.ts && react-router typegen"
+  },
+  "exclude": ["build/"],
+  "fmt": { "exclude": ["!app/"] },
+  "lint": { "exclude": ["!app/", "app/deno.d.ts"] },
+  "nodeModulesDir": "manual",
+  "imports": {
+    "@std/http": "jsr:@std/http@^1.0.11",
+    "@std/path": "jsr:@std/path@^1.0.8",
+    "@oak/oak": "jsr:@oak/oak@^17.1.3",
+    "@tajpouria/cors": "jsr:@tajpouria/cors@^1.2.1"
+  }
+}

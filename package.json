@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@react-three/drei": "^9.117.3",
+    "@react-three/fiber": "^8.17.10",
+    "@types/three": "^0.170.0",
+    "canvas": "^3.0.0-rc2",
+    "isbot": "^5.1.17",
+    "konva": "^9.3.16",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-konva": "^18.2.10",
+    "react-router": "^7.0.1",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "@deno/vite-plugin": "^1.0.0",
+    "@react-router/dev": "^7.0.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.15",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11",
+    "vite-tsconfig-paths": "^5.1.3"
+  }
+}

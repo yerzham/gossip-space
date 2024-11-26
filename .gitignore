@@ -1,0 +1,6 @@
+node_modules/
+build/
+.vite/
+.react-router/
+deno.d.ts
+

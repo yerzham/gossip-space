@@ -1,0 +1,1 @@
+vfox use --global deno
