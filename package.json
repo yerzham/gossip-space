@@ -12,7 +12,8 @@
     "react-dom": "^18.3.1",
     "react-konva": "^18.2.10",
     "react-router": "^7.0.1",
-    "three": "^0.170.0"
+    "three": "^0.170.0",
+    "tunnel-rat": "^0.1.2"
   },
   "devDependencies": {
     "@deno/vite-plugin": "^1.0.0",

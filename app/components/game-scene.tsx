@@ -3,6 +3,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { Player } from "./player.tsx";
 import * as THREE from "three";
+import { ui } from "~/lib/client/tunnel.ts";
 
 const InfinitePlane = ({ mouse }: { mouse: THREE.Vector2 }) => {
   const planeRef = useRef<THREE.Mesh>(null!);
@@ -39,27 +40,32 @@ const GameScene = () => {
   };
 
   return (
-    <Canvas
-      onMouseMove={handleMouseMove}
-      style={{ width: "100vw", height: "100vh", background: "black" }}
-      camera={{ position: [0, 0, 30], fov: 55 }}
-    >
-      <Player mouse={mouse.current} />
-      <InfinitePlane mouse={mouse.current} />
-      <OrbitControls
-        enableRotate={false}
-        enablePan={false}
-        minDistance={10}
-        maxDistance={40}
-        onChange={(event) => {
-          if (!event) return;
-          const camera = event.target.object;
-          // Restrict camera's x and y movement bounds
-          camera.position.x = Math.min(Math.max(camera.position.x, -10), 10);
-          camera.position.y = Math.min(Math.max(camera.position.y, -5), 5);
-        }}
-      />
-    </Canvas>
+    <>
+      <Canvas
+        onMouseMove={handleMouseMove}
+        style={{ width: "100vw", height: "100vh", background: "black" }}
+        camera={{ position: [0, 0, 30], fov: 55 }}
+      >
+        <Player mouse={mouse.current} />
+        <InfinitePlane mouse={mouse.current} />
+        <OrbitControls
+          enableRotate={false}
+          enablePan={false}
+          minDistance={10}
+          maxDistance={40}
+          onChange={(event) => {
+            if (!event) return;
+            const camera = event.target.object;
+            // Restrict camera's x and y movement bounds
+            camera.position.x = Math.min(Math.max(camera.position.x, -10), 10);
+            camera.position.y = Math.min(Math.max(camera.position.y, -5), 5);
+          }}
+        />
+      </Canvas>
+      <div className="fixed top-0 right-0 bottom-0 left-0 pointer-events-none">
+        <ui.Out />
+      </div>
+    </>
   );
 };
 
