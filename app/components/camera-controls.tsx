@@ -2,8 +2,6 @@ import { world } from "~/game/world";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useRef } from "react";
-import { OrbitControls } from "@react-three/drei";
-import type { OrbitControls as IOrbitControls } from "three/examples/jsm/Addons.js";
 
 const CameraControls = ({ maxDistance }: { maxDistance: number }) => {
   const planeZ = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)).current;
