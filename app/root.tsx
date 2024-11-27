@@ -10,6 +10,7 @@ import {
 import type { Route } from "./+types/root.ts";
 import "./app.css";
 import { Cursor } from "./components/cursor.tsx";
+import { GameSocketProvider } from "./lib/client/game-socket.tsx";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -35,7 +36,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="cursor-none">
-        {children}
+        <GameSocketProvider>{children}</GameSocketProvider>
         <ScrollRestoration />
         <Cursor />
         <Scripts />

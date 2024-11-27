@@ -6,7 +6,6 @@ import * as THREE from "three";
 import { ui } from "~/lib/client/tunnel.ts";
 import { world } from "~/game/world.ts";
 import { useFollowPointer } from "~/lib/client/useFollowPointer.ts";
-import useWebSocket from "react-use-websocket";
 
 const InfinitePlane = () => {
   const planeRef = useRef<THREE.Mesh>(null!);
@@ -95,13 +94,6 @@ const GameScene = () => {
   const cameraDistance = world.yDim / 2 / Math.tan((20 / 2) * (Math.PI / 180));
   const cameraFov = 2 * Math.atan(world.yDim / 2 / cameraDistance) *
     (180 / Math.PI);
-
-  useWebSocket("/api/ws", {
-    onMessage: (event) => {
-      const message = JSON.parse(event.data);
-      console.log(message);
-    },
-  });
 
   return (
     <>
