@@ -2,7 +2,7 @@
   "tasks": {
     "build": "react-router build",
     "dev:react": "react-router dev",
-    "dev:wss": "deno run -A --watch ./wss.production.ts",
+    "dev:wss": "deno run -A --watch ./wss.development.ts",
     "dev": "deno task dev:react & deno task dev:wss",
     "format": "deno fmt",
     "lint": "deno lint",
