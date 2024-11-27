@@ -6,6 +6,8 @@ import * as THREE from "three";
 import { ui } from "~/lib/client/tunnel.ts";
 import { world } from "~/game/world.ts";
 import { useFollowPointer } from "~/lib/client/useFollowPointer.ts";
+import { useGameSocket } from "~/lib/client/game-socket.tsx";
+import { Box } from "./box.tsx";
 
 const InfinitePlane = () => {
   const planeRef = useRef<THREE.Mesh>(null!);
@@ -90,10 +92,30 @@ const WorldWalls = () => {
   );
 };
 
+const Agents = () => {
+  const { gameData } = useGameSocket();
+  return (
+    <>
+      {gameData?.agnets.map((agent) => (
+        <Box
+          key={agent.id}
+          position={[agent.position.x, agent.position.y, -1.5]}
+        />
+      ))}
+    </>
+  );
+};
+
 const GameScene = () => {
   const cameraDistance = world.yDim / 2 / Math.tan((20 / 2) * (Math.PI / 180));
   const cameraFov = 2 * Math.atan(world.yDim / 2 / cameraDistance) *
     (180 / Math.PI);
+
+  const { gameData } = useGameSocket();
+
+  if (!gameData) {
+    return null;
+  }
 
   return (
     <>
@@ -102,6 +124,7 @@ const GameScene = () => {
         camera={{ position: [0, 0, cameraDistance], fov: cameraFov }}
       >
         <Player />
+        <Agents />
         <InfinitePlane />
         <WorldWalls />
         <CameraControls maxDistance={cameraDistance} />

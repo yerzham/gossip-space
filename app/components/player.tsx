@@ -6,6 +6,7 @@ import { useMouse } from "~/lib/client/useMouse.ts";
 import { useFollowPointer } from "~/lib/client/useFollowPointer.ts";
 import { throttle } from "~/lib/client/utils.ts";
 import { useFrame } from "@react-three/fiber";
+import { useGameSocket } from "~/lib/client/game-socket.tsx";
 
 const Player = () => {
   const playerRef = useRef<THREE.Group>(null!);
@@ -16,11 +17,20 @@ const Player = () => {
 
   const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 0 });
 
+  const socket = useGameSocket();
+
   const updatePlayerPosition = useCallback(
     throttle(() => {
       setPlayerPosition({
         x: playerRef.current.position.x,
         y: playerRef.current.position.y,
+      });
+      socket.send({
+        type: "playerPosition",
+        data: {
+          x: playerRef.current.position.x,
+          y: playerRef.current.position.y,
+        },
       });
     }, 100),
     [],
