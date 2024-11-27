@@ -33,6 +33,7 @@
     "npm:canvas@^3.0.0-rc2": "3.0.0-rc2",
     "npm:isbot@^5.1.17": "5.1.17",
     "npm:konva@^9.3.16": "9.3.16",
+    "npm:lodash@^4.17.21": "4.17.21",
     "npm:path-to-regexp@6.2.1": "6.2.1",
     "npm:postcss@^8.4.49": "8.4.49",
     "npm:react-dom@^18.3.1": "18.3.1_react@18.3.1",

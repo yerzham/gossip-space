@@ -1,20 +1,19 @@
 import * as THREE from "three";
 import { world } from "~/game/world";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
-const usePlayer = ({
-  playerRef,
+const useFollowPointer = ({
+  targetRef,
 }: {
-  playerRef: React.MutableRefObject<THREE.Group | THREE.Mesh>;
+  targetRef: React.MutableRefObject<THREE.Group | THREE.Mesh>;
 }) => {
   const planeZ = useRef(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0)).current;
   const raycaster = useRef(new THREE.Raycaster()).current;
   const intersectPoint = useRef(new THREE.Vector3()).current;
-  const [position, setPlayerPosition] = useState({ x: 0, y: 0 });
 
   useFrame(({ camera, pointer }) => {
-    if (playerRef.current) {
+    if (targetRef.current) {
       raycaster.setFromCamera(pointer, camera);
       raycaster.ray.intersectPlane(planeZ, intersectPoint);
       intersectPoint.x = Math.min(
@@ -25,15 +24,9 @@ const usePlayer = ({
         Math.max(intersectPoint.y, -world.yDim / 2),
         world.yDim / 2,
       );
-      playerRef.current.position.lerp(intersectPoint, 0.2);
-      setPlayerPosition({
-        x: playerRef.current.position.x,
-        y: playerRef.current.position.y,
-      });
+      targetRef.current.position.lerp(intersectPoint, 0.2);
     }
   });
-
-  return { position };
 };
 
-export { usePlayer };
+export { useFollowPointer };

@@ -1,17 +1,34 @@
-import { useRef, useState } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useCallback, useRef, useState } from "react";
 import { Star } from "./star.tsx";
 import { ui } from "~/lib/client/tunnel.ts";
 import * as THREE from "three";
 import { useMouse } from "~/lib/client/useMouse.ts";
-import { usePlayer } from "~/lib/client/usePlayer.ts";
+import { useFollowPointer } from "~/lib/client/useFollowPointer.ts";
+import { throttle } from "~/lib/client/utils.ts";
+import { useFrame } from "@react-three/fiber";
 
 const Player = () => {
   const playerRef = useRef<THREE.Group>(null!);
-  const { position: playerPosition } = usePlayer({
-    playerRef,
+  useFollowPointer({
+    targetRef: playerRef,
   });
   const { position: mousePosition } = useMouse();
+
+  const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 0 });
+
+  const updatePlayerPosition = useCallback(
+    throttle(() => {
+      setPlayerPosition({
+        x: playerRef.current.position.x,
+        y: playerRef.current.position.y,
+      });
+    }, 100),
+    [],
+  );
+
+  useFrame(() => {
+    updatePlayerPosition();
+  });
 
   return (
     <>

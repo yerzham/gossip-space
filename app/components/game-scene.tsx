@@ -1,18 +1,17 @@
-import React, { useRef } from "react";
-import { Canvas, events, useFrame, useThree } from "@react-three/fiber";
+import { useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { CameraControls } from "./camera-controls.tsx";
 import { Player } from "./player.tsx";
 import * as THREE from "three";
 import { ui } from "~/lib/client/tunnel.ts";
-import { useWindowSize } from "~/lib/client/useWindowSize.tsx";
 import { world } from "~/game/world.ts";
-import { usePlayer } from "~/lib/client/usePlayer.ts";
+import { useFollowPointer } from "~/lib/client/useFollowPointer.ts";
 import useWebSocket from "react-use-websocket";
 
 const InfinitePlane = () => {
   const planeRef = useRef<THREE.Mesh>(null!);
-  usePlayer({
-    playerRef: planeRef,
+  useFollowPointer({
+    targetRef: planeRef,
   });
 
   useFrame(() => {
