@@ -47,7 +47,7 @@ const CameraControls = ({ maxDistance }: { maxDistance: number }) => {
     if (dist > 2) {
       intersectPoint
         .sub(camera.position)
-        .setLength(dist - 1)
+        .setLength(dist - 2)
         .add(camera.position);
 
       camera.position.lerp(intersectPoint, maxSpeed);
