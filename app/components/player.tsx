@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Star } from "./star.tsx";
 import { ui } from "~/lib/client/tunnel.ts";
 import * as THREE from "three";
@@ -8,12 +8,39 @@ import { throttle } from "~/lib/client/utils.ts";
 import { useFrame } from "@react-three/fiber";
 import { useGameSocket } from "~/lib/client/game-socket.tsx";
 
+const PlayerUI = memo(
+  ({ playerPosition }: { playerPosition: { x: number; y: number } }) => {
+    const { position: mousePosition } = useMouse();
+    const uiPosition = useMemo(() => {
+      return {
+        top: mousePosition.y - 40,
+        left: mousePosition.x + 20,
+      };
+    }, [mousePosition.x, mousePosition.y]);
+
+    return (
+      <ui.In>
+        <div style={uiPosition} className="absolute text-white z-0">
+          <span className="whitespace-nowrap font-mono text-xs">
+            {playerPosition.x.toFixed(2)}, {playerPosition.y.toFixed(2)}
+          </span>
+        </div>
+      </ui.In>
+    );
+  },
+  (prevProps, nextProps) => {
+    return (
+      prevProps.playerPosition.x === nextProps.playerPosition.x &&
+      prevProps.playerPosition.y === nextProps.playerPosition.y
+    );
+  }
+);
+
 const Player = () => {
   const playerRef = useRef<THREE.Group>(null!);
   useFollowPointer({
     targetRef: playerRef,
   });
-  const { position: mousePosition } = useMouse();
 
   const [playerPosition, setPlayerPosition] = useState({ x: 0, y: 0 });
 
@@ -42,24 +69,12 @@ const Player = () => {
 
   return (
     <>
-      <ui.In>
-        <div
-          style={{
-            top: mousePosition.y - 40,
-            left: mousePosition.x + 20,
-          }}
-          className="fixed text-white"
-        >
-          <span className="whitespace-nowrap font-mono text-xs">
-            {playerPosition.x.toFixed(2)}, {playerPosition.y.toFixed(2)}
-          </span>
-        </div>
-      </ui.In>
+      <PlayerUI playerPosition={playerPosition} />
       <Star
         ref={playerRef}
         onClick={() => {
           console.log("click");
-          
+
           socket.send({
             type: "callForChat",
             data: {},

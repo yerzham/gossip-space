@@ -8,6 +8,7 @@ import { world } from "~/game/world.ts";
 import { useFollowPointer } from "~/lib/client/useFollowPointer.ts";
 import { useGameSocket } from "~/lib/client/game-socket.tsx";
 import { Box } from "./box.tsx";
+import { Agent } from "./agent.tsx";
 
 const InfinitePlane = () => {
   const planeRef = useRef<THREE.Mesh>(null!);
@@ -30,14 +31,14 @@ const InfinitePlane = () => {
 };
 
 const WorldWalls = () => {
-  const cameraDistance = world.yDim / 2 / Math.tan((20 / 2) * (Math.PI / 180)) +
-    6;
+  const cameraDistance =
+    world.yDim / 2 / Math.tan((20 / 2) * (Math.PI / 180)) + 6;
   const walls = [
     {
       position: new THREE.Vector3(
         0,
         world.yDim / 2 + 2,
-        cameraDistance / 2 - 3,
+        cameraDistance / 2 - 3
       ),
       rotation: new THREE.Euler((Math.PI / 180) * 90, 0, 0),
       scale: [world.xDim + 4, cameraDistance, 1] as const,
@@ -46,7 +47,7 @@ const WorldWalls = () => {
       position: new THREE.Vector3(
         0,
         -world.yDim / 2 - 2,
-        cameraDistance / 2 - 3,
+        cameraDistance / 2 - 3
       ),
       rotation: new THREE.Euler((-Math.PI / 180) * 90, 0, 0),
       scale: [world.xDim + 4, cameraDistance, 1] as const,
@@ -55,7 +56,7 @@ const WorldWalls = () => {
       position: new THREE.Vector3(
         world.xDim / 2 + 2,
         0,
-        cameraDistance / 2 - 3,
+        cameraDistance / 2 - 3
       ),
       rotation: new THREE.Euler(0, (-Math.PI / 180) * 90, 0),
       scale: [cameraDistance, world.yDim + 4, 1] as const,
@@ -64,7 +65,7 @@ const WorldWalls = () => {
       position: new THREE.Vector3(
         -world.xDim / 2 - 2,
         0,
-        cameraDistance / 2 - 3,
+        cameraDistance / 2 - 3
       ),
       rotation: new THREE.Euler(0, (Math.PI / 180) * 90, 0),
       scale: [cameraDistance, world.yDim + 4, 1] as const,
@@ -97,8 +98,9 @@ const Agents = () => {
   return (
     <>
       {gameData?.agnets.map((agent) => (
-        <Box
+        <Agent
           key={agent.id}
+          name={agent.id}
           position={[agent.position.x, agent.position.y, -1.5]}
         />
       ))}
@@ -108,8 +110,8 @@ const Agents = () => {
 
 const GameScene = () => {
   const cameraDistance = world.yDim / 2 / Math.tan((20 / 2) * (Math.PI / 180));
-  const cameraFov = 2 * Math.atan(world.yDim / 2 / cameraDistance) *
-    (180 / Math.PI);
+  const cameraFov =
+    2 * Math.atan(world.yDim / 2 / cameraDistance) * (180 / Math.PI);
 
   const { gameData } = useGameSocket();
 
@@ -119,21 +121,21 @@ const GameScene = () => {
 
   return (
     <>
-    <div className="h-screen w-screen relative bg-black">
-      <Canvas
-        className="h-full w-full"
-        camera={{ position: [0, 0, cameraDistance], fov: cameraFov }}
-      >
-        <Player />
-        <Agents />
-        <InfinitePlane />
-        <WorldWalls />
-        <CameraControls maxDistance={cameraDistance} />
-      </Canvas>
-      <div className="absolute inset-0 pointer-events-none text-white">
-        <ui.Out />
+      <div className="h-screen w-screen relative bg-black">
+        <Canvas
+          className="h-full w-full"
+          camera={{ position: [0, 0, cameraDistance], fov: cameraFov }}
+        >
+          <Player />
+          <Agents />
+          <InfinitePlane />
+          <WorldWalls />
+          <CameraControls maxDistance={cameraDistance} />
+        </Canvas>
+        <div className="absolute inset-0 pointer-events-none text-white">
+          <ui.Out />
+        </div>
       </div>
-    </div>
     </>
   );
 };
