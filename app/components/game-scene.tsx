@@ -119,8 +119,9 @@ const GameScene = () => {
 
   return (
     <>
+    <div className="h-screen w-screen relative bg-black">
       <Canvas
-        style={{ width: "100vw", height: "100vh", background: "black" }}
+        className="h-full w-full"
         camera={{ position: [0, 0, cameraDistance], fov: cameraFov }}
       >
         <Player />
@@ -129,9 +130,10 @@ const GameScene = () => {
         <WorldWalls />
         <CameraControls maxDistance={cameraDistance} />
       </Canvas>
-      <div className="fixed top-0 right-0 bottom-0 left-0 pointer-events-none text-white">
+      <div className="absolute inset-0 pointer-events-none text-white">
         <ui.Out />
       </div>
+    </div>
     </>
   );
 };
