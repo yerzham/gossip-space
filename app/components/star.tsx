@@ -1,7 +1,76 @@
 import { useGLTF } from "@react-three/drei";
-import { forwardRef, useImperativeHandle, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import {
+  forwardRef,
+  MutableRefObject,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { MeshProps, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { motion } from "framer-motion-3d";
+
+const AnimatedStarHalo = ({
+  onAnimationComplete,
+}: {
+  onAnimationComplete?: () => void;
+}) => {
+  const halo1Ref = useRef<THREE.Mesh>(null!);
+  const maxHaloScale = 3;
+
+  const initialRotation = useMemo(
+    () =>
+      new THREE.Euler(
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 2
+      ),
+    []
+  );
+
+  useFrame(() => {
+    if (halo1Ref.current) {
+      halo1Ref.current.rotation.z =
+        (halo1Ref.current.rotation.z + 0.01) % (Math.PI * 2);
+      halo1Ref.current.rotation.y =
+        (halo1Ref.current.rotation.y + 0.01) % (Math.PI * 2);
+      halo1Ref.current.rotation.x =
+        (halo1Ref.current.rotation.x + 0.01) % (Math.PI * 2);
+    }
+  });
+
+  return (
+    <>
+      <motion.mesh
+        ref={halo1Ref as unknown as MutableRefObject<MeshProps>}
+        transition={{ type: "spring", duration: 0.5 }}
+        variants={{
+          initial: { scale: 0 },
+          animate: { scale: maxHaloScale },
+        }}
+        initial="initial"
+        animate="animate"
+        rotation={initialRotation}
+        onAnimationComplete={onAnimationComplete}
+      >
+        <cylinderGeometry args={[1, 1, 0.2, 32, 1, true]} />
+        <motion.meshStandardMaterial
+          color="yellow"
+          emissive="yellow"
+          emissiveIntensity={0.2}
+          transparent
+          side={THREE.DoubleSide}
+          variants={{
+            initial: { opacity: 0.3 },
+            animate: { opacity: 0 },
+          }}
+        />
+      </motion.mesh>
+    </>
+  );
+};
 
 const Star = forwardRef<THREE.Group>((_, ref) => {
   const groupRef = useRef<THREE.Group>(null!);
@@ -43,9 +112,15 @@ const Star = forwardRef<THREE.Group>((_, ref) => {
     }
   });
 
+  const [animatingHalo, setAnimatingHalo] = useState(false);
+
+  const handleClick = useCallback(() => {
+    setAnimatingHalo(true);
+  }, []);
+
   return (
     <>
-      <group ref={groupRef}>
+      <group ref={groupRef} onClick={handleClick}>
         {/* Star Model */}
         <primitive object={scene} />
         {/* Light attached to the star */}
@@ -56,7 +131,11 @@ const Star = forwardRef<THREE.Group>((_, ref) => {
           color="yellow"
           position={[0, 0, 0]} // Light stays at the center of the star
         />
-        {/* Light illuminating the star */}
+        {animatingHalo && (
+          <AnimatedStarHalo
+            onAnimationComplete={() => setAnimatingHalo(false)}
+          />
+        )}
       </group>
 
       <spotLight

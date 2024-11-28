@@ -31,9 +31,11 @@
     "npm:@types/three@0.170": "0.170.0",
     "npm:autoprefixer@^10.4.20": "10.4.20_postcss@8.4.49",
     "npm:canvas@^3.0.0-rc2": "3.0.0-rc2",
+    "npm:framer-motion-3d@^11.12.0": "11.12.0_@react-three+fiber@8.2.2__react@18.3.1__react-dom@18.3.1___react@18.3.1__three@0.170.0_react@18.3.1_react-dom@18.3.1__react@18.3.1_three@0.170.0",
     "npm:isbot@^5.1.17": "5.1.17",
     "npm:konva@^9.3.16": "9.3.16",
     "npm:lodash@^4.17.21": "4.17.21",
+    "npm:motion@^11.12.0": "11.12.0_react@18.3.1_react-dom@18.3.1__react@18.3.1",
     "npm:path-to-regexp@6.2.1": "6.2.1",
     "npm:postcss@^8.4.49": "8.4.49",
     "npm:react-dom@^18.3.1": "18.3.1_react@18.3.1",
@@ -628,7 +630,7 @@
         "@react-spring/core",
         "@react-spring/shared",
         "@react-spring/types",
-        "@react-three/fiber",
+        "@react-three/fiber@8.17.10_react@18.3.1_react-dom@18.3.1__react@18.3.1_three@0.170.0",
         "react",
         "three"
       ]
@@ -643,7 +645,7 @@
         "@mediapipe/tasks-vision",
         "@monogrid/gainmap-js",
         "@react-spring/three",
-        "@react-three/fiber",
+        "@react-three/fiber@8.17.10_react@18.3.1_react-dom@18.3.1__react@18.3.1_three@0.170.0",
         "@use-gesture/react",
         "camera-controls",
         "cross-env",
@@ -657,7 +659,7 @@
         "react-dom",
         "stats-gl",
         "stats.js",
-        "suspend-react",
+        "suspend-react@0.1.3_react@18.3.1",
         "three",
         "three-mesh-bvh",
         "three-stdlib",
@@ -683,7 +685,22 @@
         "react-dom",
         "react-reconciler@0.27.0_react@18.3.1",
         "scheduler@0.21.0",
-        "suspend-react",
+        "suspend-react@0.1.3_react@18.3.1",
+        "three",
+        "zustand@3.7.2_react@18.3.1"
+      ]
+    },
+    "@react-three/fiber@8.2.2_react@18.3.1_react-dom@18.3.1__react@18.3.1_three@0.170.0": {
+      "integrity": "sha512-NO/tOCYK8SQ2vuM2y2r98054X4SMGYIlHgiVRNaSo6JiXyoT3FN0aIH1nDzhDFJ5N/2C/PKa+yeg2M2/8YDFJg==",
+      "dependencies": [
+        "@babel/runtime",
+        "@types/react-reconciler@0.26.7",
+        "react",
+        "react-dom",
+        "react-reconciler@0.27.0_react@18.3.1",
+        "react-use-measure",
+        "scheduler@0.21.0",
+        "suspend-react@0.0.8_react@18.3.1",
         "three",
         "zustand@3.7.2_react@18.3.1"
       ]
@@ -1173,6 +1190,25 @@
     "fraction.js@4.3.7": {
       "integrity": "sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew=="
     },
+    "framer-motion-3d@11.12.0_@react-three+fiber@8.2.2__react@18.3.1__react-dom@18.3.1___react@18.3.1__three@0.170.0_react@18.3.1_react-dom@18.3.1__react@18.3.1_three@0.170.0": {
+      "integrity": "sha512-PRh1sgH8Ybhwp+gELyxOHfyDlRrqy/slWHZoOsTN18xno4kjaZcQmrTfcqPZaM/o2phKH2o8W6XBon/R0OZa/g==",
+      "dependencies": [
+        "@react-three/fiber@8.2.2_react@18.3.1_react-dom@18.3.1__react@18.3.1_three@0.170.0",
+        "framer-motion",
+        "react",
+        "react-dom",
+        "react-merge-refs",
+        "three"
+      ]
+    },
+    "framer-motion@11.12.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-gZaZeqFM6pX9kMVti60hYAa75jGpSsGYWAHbBfIkuHN7DkVHVkxSxeNYnrGmHuM0zPkWTzQx10ZT+fDjn7N4SA==",
+      "dependencies": [
+        "react",
+        "react-dom",
+        "tslib"
+      ]
+    },
     "fs-constants@1.0.0": {
       "integrity": "sha512-y6OAwoSIf7FyjMIv94u+b5rdheZEjzR63GTyZJm5qh4Bi+2YgwLCcI/fPFZkL5PSixOt6ZNKm+w+Hfp/Bciwow=="
     },
@@ -1435,6 +1471,15 @@
     },
     "mkdirp-classic@0.5.3": {
       "integrity": "sha512-gKLcREMhtuZRwRAfqP3RFW+TK4JqApVBtOIftVgjuABpAtpxhPGaDcfvbhNvD0B8iD1oUr/txX35NjcaY6Ns/A=="
+    },
+    "motion@11.12.0_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-BFH9vwCs4dI9t1W1/1HonahOCnTxcKfzBR8D310wHFdx7oIwlP/51OqLNGO74lxOdCpTLf5BLe233k6yRqJo9Q==",
+      "dependencies": [
+        "framer-motion",
+        "react",
+        "react-dom",
+        "tslib"
+      ]
     },
     "ms@2.1.3": {
       "integrity": "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="
@@ -1731,6 +1776,9 @@
         "scheduler@0.23.2"
       ]
     },
+    "react-merge-refs@2.1.1": {
+      "integrity": "sha512-jLQXJ/URln51zskhgppGJ2ub7b2WFKGq3cl3NYKtlHoTG+dN2q7EzWrn3hN3EgPsTMvpR9tpq5ijdp7YwFZkag=="
+    },
     "react-reconciler@0.27.0_react@18.3.1": {
       "integrity": "sha512-HmMDKciQjYmBRGuuhIaKA1ba/7a+UsM5FzOZsMO2JYHt9Jh8reCb7j1eDC95NOyUlKM9KRyvdx0flBuDvYSBoA==",
       "dependencies": [
@@ -1759,6 +1807,14 @@
         "react-dom",
         "set-cookie-parser",
         "turbo-stream"
+      ]
+    },
+    "react-use-measure@2.1.1_react@18.3.1_react-dom@18.3.1__react@18.3.1": {
+      "integrity": "sha512-nocZhN26cproIiIduswYpV5y5lQpSQS1y/4KuvUCjSKmw7ZWIS/+g3aFnX3WdBkyuGUtTLif3UTqnLLhbDoQig==",
+      "dependencies": [
+        "debounce",
+        "react",
+        "react-dom"
       ]
     },
     "react-use-websocket@4.11.1": {
@@ -2012,6 +2068,12 @@
     "supports-preserve-symlinks-flag@1.0.0": {
       "integrity": "sha512-ot0WnXS9fgdkgIcePe6RHNk1WA8+muPa6cSjeR3V8K27q9BB1rTE3R1p7Hv0z1ZyAc8s6Vvv8DIyWf681MAt0w=="
     },
+    "suspend-react@0.0.8_react@18.3.1": {
+      "integrity": "sha512-ZC3r8Hu1y0dIThzsGw0RLZplnX9yXwfItcvaIzJc2VQVi8TGyGDlu92syMB5ulybfvGLHAI5Ghzlk23UBPF8xg==",
+      "dependencies": [
+        "react"
+      ]
+    },
     "suspend-react@0.1.3_react@18.3.1": {
       "integrity": "sha512-aqldKgX9aZqpoDp3e8/BZ8Dm7x1pJl+qI3ZKxDN0i/IQTWUwBx/ManmlVJ3wowqbno6c2bmiIfs+Um6LbsjJyQ==",
       "dependencies": [
@@ -2137,6 +2199,9 @@
       "dependencies": [
         "typescript"
       ]
+    },
+    "tslib@2.8.1": {
+      "integrity": "sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w=="
     },
     "tunnel-agent@0.6.0": {
       "integrity": "sha512-McnNiV1l8RYeY8tBgEpuodCC1mLUdbSN+CYBL7kJsJNInOP8UjDDEwdk6Mw60vdLLrr5NHKZhMAOSrR2NZuQ+w==",
@@ -2312,8 +2377,10 @@
         "npm:@types/three@0.170",
         "npm:autoprefixer@^10.4.20",
         "npm:canvas@^3.0.0-rc2",
+        "npm:framer-motion-3d@^11.12.0",
         "npm:isbot@^5.1.17",
         "npm:konva@^9.3.16",
+        "npm:motion@^11.12.0",
         "npm:postcss@^8.4.49",
         "npm:react-dom@^18.3.1",
         "npm:react-konva@^18.2.10",
