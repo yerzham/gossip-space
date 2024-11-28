@@ -33,7 +33,7 @@ const Player = () => {
         },
       });
     }, 100),
-    [],
+    []
   );
 
   useFrame(() => {
@@ -55,7 +55,17 @@ const Player = () => {
           </span>
         </div>
       </ui.In>
-      <Star ref={playerRef} />
+      <Star
+        ref={playerRef}
+        onClick={() => {
+          console.log("click");
+          
+          socket.send({
+            type: "callForChat",
+            data: {},
+          });
+        }}
+      />
     </>
   );
 };

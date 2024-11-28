@@ -14,7 +14,12 @@ export const gameDataSchema = z.object({
         x: z.number(),
         y: z.number(),
       }),
-    }),
+    })
+  ),
+  activeConversations: z.array(
+    z.object({
+      parties: z.array(z.string()),
+    })
   ),
 });
 
@@ -34,4 +39,5 @@ export const gameData: GameData = {
       position: { x: -1, y: -1 },
     },
   ],
+  activeConversations: [],
 };

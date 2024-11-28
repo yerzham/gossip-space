@@ -11,6 +11,7 @@ import {
 import { MeshProps, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { motion } from "framer-motion-3d";
+import { EventHandlers } from "@react-three/fiber/dist/declarations/src/core/events";
 
 const AnimatedStarHalo = ({
   onAnimationComplete,
@@ -72,83 +73,92 @@ const AnimatedStarHalo = ({
   );
 };
 
-const Star = forwardRef<THREE.Group>((_, ref) => {
-  const groupRef = useRef<THREE.Group>(null!);
-  const spotLightRef = useRef<THREE.SpotLight>(null!);
+const Star = forwardRef<THREE.Group, EventHandlers>(
+  ({ onClick, ...props }, ref) => {
+    const groupRef = useRef<THREE.Group>(null!);
+    const spotLightRef = useRef<THREE.SpotLight>(null!);
 
-  useImperativeHandle(ref, () => groupRef.current);
+    useImperativeHandle(ref, () => groupRef.current);
 
-  const { scene } = useGLTF("/great_icosahedron.glb");
+    const { scene } = useGLTF("/great_icosahedron.glb");
 
-  scene.traverse((child) => {
-    if ((child as THREE.Mesh).isMesh) {
-      const mesh = child as THREE.Mesh;
-      mesh.material = new THREE.MeshStandardMaterial({
-        color: "white", // Base color of the star
-        metalness: 0.5, // Make it shiny like metal
+    scene.traverse((child) => {
+      if ((child as THREE.Mesh).isMesh) {
+        const mesh = child as THREE.Mesh;
+        mesh.material = new THREE.MeshStandardMaterial({
+          color: "white", // Base color of the star
+          metalness: 0.5, // Make it shiny like metal
 
-        roughness: 0.5, // Smooth surface
+          roughness: 0.5, // Smooth surface
 
-        emissive: new THREE.Color("yellow"), // Glow effect
-        emissiveIntensity: 0.2, // Intensity of the glow
-        transparent: true, // Enable transparency
-        opacity: 0.8,
-      });
-    }
-  });
-
-  useFrame(({ clock }) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += 0.01;
-      groupRef.current.rotation.x += 0.008;
-      const scale = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.05;
-      groupRef.current.scale.set(scale, scale, scale);
-      if (spotLightRef.current) {
-        spotLightRef.current.position.x = groupRef.current.position.x;
-        spotLightRef.current.position.y = groupRef.current.position.y;
-        spotLightRef.current.position.z = 1;
-        spotLightRef.current.target = groupRef.current;
+          emissive: new THREE.Color("yellow"), // Glow effect
+          emissiveIntensity: 0.2, // Intensity of the glow
+          transparent: true, // Enable transparency
+          opacity: 0.8,
+        });
       }
-    }
-  });
+    });
 
-  const [animatingHalo, setAnimatingHalo] = useState(false);
+    useFrame(({ clock }) => {
+      if (groupRef.current) {
+        groupRef.current.rotation.y += 0.01;
+        groupRef.current.rotation.x += 0.008;
+        const scale = 1 + Math.sin(clock.getElapsedTime() * 2) * 0.05;
+        groupRef.current.scale.set(scale, scale, scale);
+        if (spotLightRef.current) {
+          spotLightRef.current.position.x = groupRef.current.position.x;
+          spotLightRef.current.position.y = groupRef.current.position.y;
+          spotLightRef.current.position.z = 1;
+          spotLightRef.current.target = groupRef.current;
+        }
+      }
+    });
 
-  const handleClick = useCallback(() => {
-    setAnimatingHalo(true);
-  }, []);
+    const [animatingHalo, setAnimatingHalo] = useState(false);
 
-  return (
-    <>
-      <group ref={groupRef} onClick={handleClick}>
-        {/* Star Model */}
-        <primitive object={scene} />
-        {/* Light attached to the star */}
-        <pointLight
-          intensity={2} // Brightness of the emitted light
-          distance={10} // Range of light
-          decay={2} // Light falloff
-          color="yellow"
-          position={[0, 0, 0]} // Light stays at the center of the star
-        />
-        {animatingHalo && (
-          <AnimatedStarHalo
-            onAnimationComplete={() => setAnimatingHalo(false)}
+    const handleClick = useCallback(() => {
+      setAnimatingHalo(true);
+    }, []);
+
+    return (
+      <>
+        <group
+          ref={groupRef}
+          onClick={(event) => {
+            handleClick();
+            onClick?.(event);
+          }}
+          {...props}
+        >
+          {/* Star Model */}
+          <primitive object={scene} />
+          {/* Light attached to the star */}
+          <pointLight
+            intensity={2} // Brightness of the emitted light
+            distance={10} // Range of light
+            decay={2} // Light falloff
+            color="yellow"
+            position={[0, 0, 0]} // Light stays at the center of the star
           />
-        )}
-      </group>
+          {animatingHalo && (
+            <AnimatedStarHalo
+              onAnimationComplete={() => setAnimatingHalo(false)}
+            />
+          )}
+        </group>
 
-      <spotLight
-        ref={spotLightRef}
-        intensity={1} // Brightness of the emitted light
-        distance={2} // Range of light
-        decay={4} // Light falloff
-        angle={Math.PI / 4} // Light cone angle
-        color="yellow"
-      />
-    </>
-  );
-});
+        <spotLight
+          ref={spotLightRef}
+          intensity={1} // Brightness of the emitted light
+          distance={2} // Range of light
+          decay={4} // Light falloff
+          angle={Math.PI / 4} // Light cone angle
+          color="yellow"
+        />
+      </>
+    );
+  }
+);
 Star.displayName = "Star";
 
 const createIcosahedronGeometry = () => {
