@@ -28,7 +28,13 @@ After installing the packages, generating types, and configuring openai key, you
 deno task dev
 ```
 
+# Credits
+
 ## Great Icosahedron model used for the player model
 
 "Great Icosahedron" (https://skfb.ly/SpqZ) by PTham is licensed under Creative
 Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
+
+## Example of Deno and React Router setup
+
+[https://github.com/redabacha/react-router-deno-template](https://github.com/redabacha/react-router-deno-template)
