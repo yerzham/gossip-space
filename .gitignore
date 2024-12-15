@@ -3,4 +3,4 @@ build/
 .vite/
 .react-router/
 deno.d.ts
-
+.env
