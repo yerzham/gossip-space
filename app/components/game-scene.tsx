@@ -7,7 +7,6 @@ import { ui } from "~/lib/client/tunnel.ts";
 import { world } from "~/game/world.ts";
 import { useFollowPointer } from "~/lib/client/useFollowPointer.ts";
 import { useGameSocket } from "~/lib/client/game-socket.tsx";
-import { Box } from "./box.tsx";
 import { Agent } from "./agent.tsx";
 
 const InfinitePlane = () => {
@@ -100,7 +99,7 @@ const Agents = () => {
       {gameData?.agnets.map((agent) => (
         <Agent
           key={agent.id}
-          name={agent.id}
+          agentId={agent.id}
           position={[agent.position.x, agent.position.y, -1.5]}
         />
       ))}

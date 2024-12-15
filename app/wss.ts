@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { world } from "./game/world.ts";
-import { gameData } from "./game/data.ts";
+import { chatHistoryStore, ChatMessageChunk, gameData } from "./game/data.ts";
+import { chatWithAgent } from "./lib/server/chat.ts";
 
 const MIN_CONVERSATION_DISTANCE = 3;
 
@@ -112,13 +113,127 @@ const callForChat = (_: z.infer<typeof callForChatSchema>) => {
   }
 };
 
-const messageHandler = (message: z.infer<typeof messageSchema>) => {
+const chatMessageSchema = z.object({
+  type: z.literal("chatMessage"),
+  data: z.object({
+    to: z.string(),
+    message: z.string(),
+  }),
+});
+const chunkSchema = z.object({
+  id: z.string(),
+  object: z.literal("chat.completion.chunk"),
+  choices: z.array(
+    z.union([
+      z.object({
+        index: z.number(),
+        delta: z.object({ content: z.string() }),
+        finish_reason: z.null(),
+      }),
+      z.object({
+        index: z.number(),
+        delta: z.object({}),
+        finish_reason: z.string(),
+      }),
+    ])
+  ),
+});
+const chatMessage = async (
+  data: z.infer<typeof chatMessageSchema>,
+  socket: WebSocket
+) => {
+  const {
+    data: { to, message },
+  } = data;
+  const chatHistory = chatHistoryStore.chats.get(
+    ["player", to].sort().join("-")
+  );
+
+  const stream = await chatWithAgent({
+    message,
+    to,
+    chatHistory: chatHistory ?? [],
+  });
+
+  updateChatHistoryWithChunk({
+    streamId: crypto.randomUUID(),
+    from: "player",
+    to,
+    message: message,
+    ended: true,
+  });
+  for await (const chunk of stream) {
+    const res = chunkSchema.safeParse(chunk);
+    if (!res.success) {
+      console.error(res.error);
+      stream.controller.abort();
+      return;
+    }
+    const message = res.data.choices[0];
+    const messageChunk = {
+      streamId: res.data.id,
+      from: to,
+      to: "player",
+      message: "content" in message.delta ? message.delta.content : "",
+      ended: message.finish_reason !== null,
+    };
+    updateChatHistoryWithChunk(messageChunk);
+    socket.send(
+      JSON.stringify({
+        type: "chatMessageChunk",
+        data: messageChunk,
+      })
+    );
+  }
+};
+
+const updateChatHistoryWithChunk = (chatMessageChunk: ChatMessageChunk) => {
+  const chatId = [chatMessageChunk.to, chatMessageChunk.from].sort().join("-");
+  const chatHistory = chatHistoryStore.chats.get(chatId);
+  if (chatHistory) {
+    const messageIndex = chatHistory.findIndex(
+      (message) => message.id === chatMessageChunk.streamId
+    );
+    const newChatHistory = chatHistory.slice();
+    if (messageIndex !== -1) {
+      newChatHistory[messageIndex] = {
+        ...newChatHistory[messageIndex],
+        message: newChatHistory[messageIndex].message + chatMessageChunk.message,
+      };
+    } else {
+      newChatHistory.push({
+        id: chatMessageChunk.streamId,
+        from: chatMessageChunk.from,
+        to: chatMessageChunk.to,
+        message: chatMessageChunk.message,
+      });
+    }
+    chatHistoryStore.chats.set(chatId, newChatHistory);
+  } else {
+    chatHistoryStore.chats.set(chatId, [
+      {
+        id: chatMessageChunk.streamId,
+        from: chatMessageChunk.from,
+        to: chatMessageChunk.to,
+        message: chatMessageChunk.message,
+      },
+    ]);
+  }
+};
+
+const messageHandler = (
+  message: z.infer<typeof messageSchema>,
+  socket: WebSocket
+) => {
   switch (message.type) {
     case "playerPosition":
       updatePlayerPosition(playerPositionUpdateSchema.parse(message));
       break;
     case "callForChat":
       callForChat(callForChatSchema.parse(message));
+      break;
+    case "chatMessage":
+      chatMessage(chatMessageSchema.parse(message), socket);
       break;
     default:
       break;
@@ -129,13 +244,15 @@ export const wssHandler = (req: Request) => {
   if (req.headers.get("upgrade") === "websocket") {
     const { socket, response } = Deno.upgradeWebSocket(req);
 
-    let sendInterval: NodeJS.Timeout;
+    let sendInterval: NodeJS.Timeout | number;
 
     socket.addEventListener("open", () => {
       socket.send(JSON.stringify({ message: "Hello from the server!" }));
 
       sendInterval = setInterval(() => {
-        socket.send(JSON.stringify({ gameData }));
+        socket.send(
+          JSON.stringify({ type: "gameStateUpdate", data: gameData })
+        );
       }, 100);
     });
 
@@ -143,13 +260,14 @@ export const wssHandler = (req: Request) => {
       const data = JSON.parse(event.data);
       try {
         const message = messageSchema.parse(data);
-        messageHandler(message);
+        messageHandler(message, socket);
       } catch (error) {
         console.error(error);
       }
     });
 
     socket.addEventListener("close", () => {
+      // @ts-ignore Deno expects a number only
       clearInterval(sendInterval);
     });
 
