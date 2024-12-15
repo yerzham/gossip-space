@@ -22,6 +22,12 @@ Create a `.env` file in the root of the project and add the following:
 OPENAI_API_KEY=your-openai-key
 ```
 
+or simply export the key in your terminal:
+
+```sh
+export OPENAI_API_KEY=your-openai-key
+```
+
 After installing the packages, generating types, and configuring openai key, you can run the game:
 
 ```sh
