@@ -19,8 +19,8 @@ export const Box = forwardRef<THREE.Mesh, BoxProps>(function Box(
 
   return (
     <mesh {...props} ref={meshRef} scale={[0.75, 0.75, 0.75]}>
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={color} transparent opacity={0.8} />
+      <icosahedronGeometry args={[0.8, 0]} />
+      <meshStandardMaterial color={color} transparent opacity={0.7} />
     </mesh>
   );
 });

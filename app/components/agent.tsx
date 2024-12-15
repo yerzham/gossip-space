@@ -22,7 +22,7 @@ export const AgnetUI = memo(
       <ui.In>
         {isChattingWithPlayer && (
           <div style={position} className="absolute text-white z-10">
-            <div className="bg-black border border-yellow-500 p-2 rounded-md">
+            <div className="bg-black/50 backdrop-blur border border-yellow-500 p-2 rounded-md">
               <p>Hey there!</p>
             </div>
           </div>

@@ -121,11 +121,12 @@ const GameScene = () => {
 
   return (
     <>
-      <div className="h-screen w-screen relative bg-black">
+      <div className="h-screen w-screen relative overflow-hidden">
         <Canvas
           className="h-full w-full"
           camera={{ position: [0, 0, cameraDistance], fov: cameraFov }}
         >
+          <color attach="background" args={["black"]} />
           <Player />
           <Agents />
           <InfinitePlane />

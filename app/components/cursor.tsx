@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useMouse } from "~/lib/client/useMouse";
 
 const Cursor: React.FC = () => {
